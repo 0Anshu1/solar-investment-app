@@ -1,0 +1,31 @@
+Country,City,Latitude,Longitude,GHI_Daily,Tariff_USD_kWh,Policy_Summary,Incentive_Type,Incentive_Value_USD,Local_Currency_Code,Local_Currency_Symbol,USD_to_Local_Rate
+India,New Delhi,28.6139,77.2090,5.1,0.10,"PM - Surya Ghar: Capital subsidy.",CAPEX_Subsidy,940,INR,₹,88.7
+India,Mumbai,19.0760,72.8777,5.0,0.12,"PM - Surya Ghar: Capital subsidy.",CAPEX_Subsidy,940,INR,₹,88.7
+India,Bangalore,12.9716,77.5946,5.3,0.11,"PM - Surya Ghar: Capital subsidy.",CAPEX_Subsidy,940,INR,₹,88.7
+India,Chennai,13.0827,80.2707,5.2,0.11,"PM - Surya Ghar: Capital subsidy.",CAPEX_Subsidy,940,INR,₹,88.7
+India,Kolkata,22.5726,88.3639,4.6,0.10,"PM - Surya Ghar: Capital subsidy.",CAPEX_Subsidy,940,INR,₹,88.7
+Kenya,Nairobi,-1.2921,36.8219,5.4,0.22,"Net-Metering 2024 + VAT/Duty Exemption.",CAPEX_Tax_Exempt,0,KES,KES,129.2
+Kenya,Mombasa,-4.0435,39.6682,5.2,0.22,"Net-Metering 2024 + VAT/Duty Exemption.",CAPEX_Tax_Exempt,0,KES,KES,129.2
+Kenya,Kisumu,-0.1022,34.7617,5.5,0.22,"Net-Metering 2024 + VAT/Duty Exemption.",CAPEX_Tax_Exempt,0,KES,KES,129.2
+Kenya,Nakuru,-0.3031,36.0800,5.6,0.22,"Net-Metering 2024 + VAT/Duty Exemption.",CAPEX_Tax_Exempt,0,KES,KES,129.2
+Kenya,Eldoret,0.5143,35.2696,5.7,0.22,"Net-Metering 2024 + VAT/Duty Exemption.",CAPEX_Tax_Exempt,0,KES,KES,129.2
+Vietnam,Ho Chi Minh City,10.7626,106.6602,4.8,0.08,"Rooftop Self-Consumption Policy (Decree 135).",None,0,VND,₫,26330
+Vietnam,Hanoi,21.0285,105.8542,4.0,0.08,"Rooftop Self-Consumption Policy (Decree 135).",None,0,VND,₫,26330
+Vietnam,Da Nang,16.0544,108.2022,4.5,0.08,"Rooftop Self-Consumption Policy (Decree 135).",None,0,VND,₫,26330
+Vietnam,Haiphong,20.8449,106.6881,4.1,0.08,"Rooftop Self-Consumption Policy (Decree 135).",None,0,VND,₫,26330
+Vietnam,Can Tho,10.0452,105.7469,5.0,0.08,"Rooftop Self-Consumption Policy (Decree 135).",None,0,VND,₫,26330
+Bangladesh,Dhaka,23.8103,90.4125,4.5,0.08,"Net-Metering Policy (Revised 2025).",None,0,BDT,৳,122.2
+Bangladesh,Chittagong,22.3569,91.7832,4.4,0.08,"Net-Metering Policy (Revised 2025).",None,0,BDT,৳,122.2
+Bangladesh,Khulna,22.8456,89.5403,4.6,0.08,"Net-Metering Policy (Revised 2025).",None,0,BDT,৳,122.2
+Bangladesh,Sylhet,24.8949,91.8687,4.3,0.08,"Net-Metering Policy (Revised 2025).",None,0,BDT,৳,122.2
+Bangladesh,Rajshahi,24.3745,88.6042,4.7,0.08,"Net-Metering Policy (Revised 2025).",None,0,BDT,৳,122.2
+Sri Lanka,Colombo,6.9271,79.8612,4.7,0.15,"Net Metering & Net Accounting.",None,0,LKR,LKR,304.4
+Sri Lanka,Kandy,7.2906,80.6337,4.5,0.15,"Net Metering & Net Accounting.",None,0,LKR,LKR,304.4
+Sri Lanka,Galle,6.0535,80.2210,4.6,0.15,"Net Metering & Net Accounting.",None,0,LKR,LKR,304.4
+Sri Lanka,Jaffna,9.6615,80.0255,5.0,0.15,"Net Metering & Net Accounting.",None,0,LKR,LKR,304.4
+Sri Lanka,Negombo,7.2088,79.8373,4.7,0.15,"Net Metering & Net Accounting.",None,0,LKR,LKR,304.4
+South Africa,Johannesburg,-26.2041,28.0473,5.5,0.14,"Business Tax Incentives (No residential subsidy).",None,0,ZAR,R,17.3
+South Africa,Cape Town,-33.9249,18.4241,4.8,0.15,"Business Tax Incentives (No residential subsidy).",None,0,ZAR,R,17.3
+South Africa,Durban,-29.8587,31.0218,4.9,0.14,"Business Tax Incentives (No residential subsidy).",None,0,ZAR,R,17.3
+South Africa,Pretoria,-25.7479,28.2293,5.6,0.14,"Business Tax Incentives (No residential subsidy).",None,0,ZAR,R,17.3
+South Africa,Port Elizabeth,-33.9608,25.6022,4.7,0.15,"Business Tax Incentives (No residential subsidy).",None,0,ZAR,R,17.3
