@@ -199,7 +199,7 @@ if calculate_button:
         }
     
     # --- ADDED TOAST ---
-    st.toast(f"Success! Calculated for {selected_city}.", icon="✅")
+    #st.toast(f"Success! Calculated for {selected_city}.", icon="✅")
 
 # --- 7. DISPLAY RESULTS (NO TABS) ---
 if st.session_state.results:
