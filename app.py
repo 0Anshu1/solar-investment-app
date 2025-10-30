@@ -251,5 +251,5 @@ for idx, row in df.iterrows():
         tooltip=f"{row['City']}, {row['Country']}<br>GHI: {row['GHI_Daily']} kWh/m²/day",
         popup=popup_text,
         icon=folium.Icon(color="red", icon="info-sign")
-    )..add_to(m)
+    ).add_to(m) # --- THIS IS THE FIX ---
 st_folium(m, width=725, height=500)
