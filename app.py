@@ -173,7 +173,7 @@ if calculate_button:
         "cost": display_cost,
         "ratio": PERFORMANCE_RATIO,
         "symbol": display_symbol,
-        "currency_code": display.currency
+        "currency_code": display_currency  # --- THIS IS THE FIX ---
     }
 
 # --- 7. DISPLAY RESULTS (NO TABS) ---
