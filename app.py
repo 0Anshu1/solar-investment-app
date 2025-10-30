@@ -4,7 +4,12 @@ import folium
 from streamlit_folium import st_folium
 from fpdf import FPDF, XPos, YPos
 
-st.set_page_config(layout="wide")
+# --- 1. SETTINGS & DATA LOADING ---
+st.set_page_config(
+    page_title="Solar Investment Platform",
+    page_icon="🌞",
+    layout="wide"
+)
 
 @st.cache_data
 def load_data():
@@ -13,12 +18,14 @@ def load_data():
 
 df = load_data()
 
+# --- 2. SESSION STATE INITIALIZATION ---
 if 'results' not in st.session_state:
     st.session_state.results = None
 
 def clear_results():
     st.session_state.results = None
 
+# --- 3. PDF GENERATOR FUNCTION (FIXED!) ---
 def create_pdf(country, city, size, cost, net_cost, revenue, payback, energy, policy, symbol, currency_code):
     pdf = FPDF()
     pdf.add_page()
@@ -33,8 +40,10 @@ def create_pdf(country, city, size, cost, net_cost, revenue, payback, energy, po
     pdf.cell(0, 10, "Key Metrics", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("Helvetica", '', 12)
     pdf.cell(0, 8, f"  - Payback Period: {payback:.2f} Years", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 8, f"  - Net System Cost: {symbol}{net_cost:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 8, f"  - Est. Annual Revenue: {symbol}{revenue:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    # --- FIX 1: Removed {symbol} ---
+    pdf.cell(0, 8, f"  - Net System Cost: {net_cost:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    # --- FIX 2: Removed {symbol} ---
+    pdf.cell(0, 8, f"  - Est. Annual Revenue: {revenue:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(5)
 
     # Input Assumptions
@@ -43,7 +52,8 @@ def create_pdf(country, city, size, cost, net_cost, revenue, payback, energy, po
     pdf.set_font("Helvetica", '', 12)
     pdf.cell(0, 8, f"  - Location: {city}, {country}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.cell(0, 8, f"  - System Size: {size} kW", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 8, f"  - Initial Cost (Est.): {symbol}{cost:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    # --- FIX 3: Removed {symbol} ---
+    pdf.cell(0, 8, f"  - Initial Cost (Est.): {cost:,.2f} {currency_code}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.cell(0, 8, f"  - Est. Annual Energy: {energy:,.0f} kWh", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.ln(5)
     
@@ -56,7 +66,8 @@ def create_pdf(country, city, size, cost, net_cost, revenue, payback, energy, po
     return bytes(pdf.output())
 
 
-st.sidebar.header("Input Your System Details")
+# --- 4. SIDEBAR ---
+st.sidebar.header("🌞 Input Your System Details")
 
 selected_country = st.sidebar.selectbox(
     "Select Country", 
@@ -95,20 +106,23 @@ display_currency = st.sidebar.selectbox(
 )
 
 calculate_button = st.sidebar.button("Calculate ROI")
-
-
-st.title("🌞 Cross-Border Solar Investment Platform")
-st.write("A simple tool to compare solar investment opportunities.")
 st.sidebar.caption(f"Note: Exchange rates are static. 1 USD = {local_rate:.2f} {local_code}")
 
+
+# --- 5. MAIN APP UI ---
+st.title("🌞 Cross-Border Solar Investment Platform")
+st.write("A simple tool to compare solar investment opportunities.")
+
+# --- 6. ROI CALCULATION ---
 if calculate_button:
     city_data = df[df['City'] == selected_city].iloc[0]
     
     ghi = city_data['GHI_Daily']
-    tariff = city_data['Tariff_USD_kWh'] # Tariff is always in USD in our DB
+    tariff = city_data['Tariff_USD_kWh']
     incentive_type = city_data['Incentive_Type']
-    incentive_value_usd = city_data['Incentive_Value_USD'] # Incentive is also in USD
+    incentive_value_usd = city_data['Incentive_Value_USD']
     policy_summary = city_data['Policy_Summary']
+
     if display_currency == "USD":
         display_rate = 1.0
         display_symbol = "$"
@@ -129,88 +143,94 @@ if calculate_button:
     
     display_cost = system_cost_usd * display_rate
     display_net_cost = net_system_cost_usd * display_rate
-    display_revenue = annual_revenue_usd * display_rate
+    display_revenue = annual_revenue_usd * display.rate
     
     pdf_bytes = create_pdf(
         country=selected_country,
         city=selected_city,
         size=system_size_kw,
-        cost=display_cost, # Pass converted cost
-        net_cost=display_net_cost, # Pass converted net cost
-        revenue=display_revenue, # Pass converted revenue
+        cost=display_cost,
+        net_cost=display_net_cost,
+        revenue=display_revenue,
         payback=payback_period_years,
         energy=annual_energy_kwh,
         policy=policy_summary,
-        symbol=display_symbol, # Pass symbol
-        currency_code=display_currency # Pass currency code
+        symbol=display_symbol, # We still pass symbol, just not used in PDF
+        currency_code=display_currency
     )
     
     st.session_state.results = {
         "country": selected_country,
         "city": selected_city,
         "payback": payback_period_years,
-        "net_cost": display_net_cost, 
-        "revenue": display_revenue, 
+        "net_cost": display_net_cost,
+        "revenue": display_revenue,
         "energy": annual_energy_kwh,
         "pdf_bytes": pdf_bytes,
         "file_name": f"Solar_Report_{selected_country}_{selected_city}.pdf",
-        "incentive_value": incentive_value_usd * display_rate, 
+        "incentive_value": incentive_value_usd * display_rate,
         "incentive_type": incentive_type,
         "ghi": ghi,
-        "tariff": tariff * display_rate, 
+        "tariff": tariff * display_rate,
         "size": system_size_kw,
-        "cost": display_cost, 
+        "cost": display_cost,
         "ratio": PERFORMANCE_RATIO,
-        "symbol": display_symbol, 
-        "currency_code": display_currency 
+        "symbol": display_symbol,
+        "currency_code": display_currency
     }
 
-if st.session_state.results:
-    res = st.session_state.results
-    
-    st.header(f"Results for {res['city']}, {res['country']}")
-    
-    st.subheader(f"Simple Payback Period: {res['payback']:.2f} Years")
-    st.progress(1.0 / max(1.0, res['payback']))
+# --- 7. TABS FOR DISPLAY ---
+tab_results, tab_data, tab_map = st.tabs(["📊 ROI Results", "📈 Data Overview", "🗺️ World Map"])
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Net System Cost", f"{res['symbol']}{res['net_cost']:,.2f} {res['currency_code']}")
-    col2.metric("Annual Revenue", f"{res['symbol']}{res['revenue']:,.2f} {res['currency_code']}")
-    col3.metric("Annual Energy", f"{res['energy']:,.0f} kWh")
-    
-    st.subheader("Download Your Report")
-    
-    st.download_button(
-        label="Download Investment Summary (PDF)",
-        data=res['pdf_bytes'],
-        file_name=res['file_name'],
-        mime="application/pdf"
-    )
-    
-    with st.expander("Show Calculation Details"):
-        st.write(f"- **Inputs:** {res['size']} kW system, {res['symbol']}{res['cost']:,.2f} {res['currency_code']} cost")
-        st.write(f"- **Incentive:** {res['symbol']}{res['incentive_value']:,.2f} ({res['incentive_type']})")
-        st.write(f"- **Solar Potential (GHI):** {res['ghi']} kWh/f²/day")
-        st.write(f"- **Electricity Tariff (Est.):** {res['symbol']}{res['tariff']:.2f}/kWh")
-        st.write(f"- **Performance Ratio:** {res['ratio'] * 100}% (Assumed)")
+with tab_results:
+    if st.session_state.results:
+        res = st.session_state.results
+        
+        st.header(f"Results for {res['city']}, {res['country']}")
+        
+        st.subheader(f"Simple Payback Period: {res['payback']:.2f} Years")
+        st.progress(1.0 / max(1.0, res['payback']))
 
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Net System Cost", f"{res['symbol']}{res['net_cost']:,.2f} {res['currency_code']}")
+        col2.metric("Annual Revenue", f"{res['symbol']}{res['revenue']:,.2f} {res['currency_code']}")
+        col3.metric("Annual Energy", f"{res['energy']:,.0f} kWh")
+        
+        st.subheader("Download Your Report")
+        
+        st.download_button(
+            label="Download Investment Summary (PDF)",
+            data=res['pdf_bytes'],
+            file_name=res['file_name'],
+            mime="application/pdf"
+        )
+        
+        with st.expander("Show Calculation Details"):
+            st.write(f"- **Inputs:** {res['size']} kW system, {res['symbol']}{res['cost']:,.2f} {res['currency_code']} cost")
+            st.write(f"- **Incentive:** {res['symbol']}{res['incentive_value']:,.2f} ({res['incentive_type']})")
+            st.write(f"- **Solar Potential (GHI):** {res['ghi']} kWh/f²/day")
+            st.write(f"- **Electricity Tariff (Est.):** {res['symbol']}{res['tariff']:.2f}/kWh")
+            st.write(f"- **Performance Ratio:** {res['ratio'] * 100}% (Assumed)")
+    else:
+        st.info("Please enter your system details in the sidebar and click 'Calculate ROI'.")
 
-st.header("Data Overview (All Cities)")
-st.dataframe(df) 
+with tab_data:
+    st.header("Data Overview (All Cities)")
+    st.dataframe(df)
 
-st.header("Solar Potential Map (All Cities)")
-m = folium.Map(location=[10.0, 55.0], zoom_start=3)
-for idx, row in df.iterrows():
-
-    popup_text = (
-        f"Tariff: ${row['Tariff_USD_kWh']}/kWh<br>"
-        f"Policy: {row['Policy_Summary']}<br>"
-        f"Rate: 1 USD = {row['USD_to_Local_Rate']} {row['Local_Currency_Code']}"
-    )
-    folium.Marker(
-        location=[row['Latitude'], row['Longitude']],
-        tooltip=f"{row['City']}, {row['Country']}<br>GHI: {row['GHI_Daily']} kWh/m²/day",
-        popup=popup_text,
-        icon=folium.Icon(color="red", icon="info-sign")
-    ).add_to(m)
-st_folium(m, width=725, height=500)
+with tab_map:
+    st.header("Solar Potential Map (All Cities)")
+    m = folium.Map(location=[10.0, 55.0], zoom_start=3)
+    for idx, row in df.iterrows():
+        popup_text = (
+            f"Tariff: ${row['Tariff_USD_kWh']}/kWh<br>"
+            f"Policy: {row['Policy_Summary']}<br>"
+            f"Rate: 1 USD = {row['USD_to_Local_Rate']} {row['Local_Currency_Code']}"
+        )
+        folium.Marker(
+            location=[row['Latitude'], row['Longitude']],
+            tooltip=f"{row['City']}, {row['Country']}<br>GHI: {row['GHI_Daily']} kWh/m²/day",
+            popup=popup_text,
+            icon=folium.Icon(color="red", icon="info-sign")
+        ).add_to(m)
+    st_folium(m, width=725, height=500)
